@@ -16,7 +16,7 @@ namespace SharpInvaders
 
         public static readonly Random Random = new Random();
         private readonly List<GameObject> _gameObjects = new List<GameObject>();
-        private readonly List<Texture2D> _enemyShipTextures = new List<Texture2D>();
+        private Texture2D _enemyShipTexture;
         private Player _player;
         private KeyboardState _keyboardState;
         private KeyboardState _lastKeyboardState;
@@ -44,11 +44,11 @@ namespace SharpInvaders
         {
             _gameObjects.Clear();
 
-            float spacingWidth = (float)(_enemyShipTextures[0].Width * Settings.EnemyScale * 0.5f);
-            float spacingHeight = (float)(_enemyShipTextures[0].Height * Settings.EnemyScale * 0.5f);
+            float spacingWidth = (float)(_enemyShipTexture.Width * Settings.EnemyScale * 0.5f);
+            float spacingHeight = (float)(_enemyShipTexture.Height * Settings.EnemyScale * 0.5f);
 
-            int maxHorizontal = (int)((Settings.Width - 4 * _enemyShipTextures[0].Width * Settings.EnemyScale) / (_enemyShipTextures[0].Width * Settings.EnemyScale + spacingWidth)); // (x + 4) * _enemyShipTextures[0].Width * Settings.EnemyScale + x * spacingWidth < Settings.Width
-            int maxVertical = (int)(Settings.Height / (2.5 * (_enemyShipTextures[0].Height * Settings.EnemyScale + spacingHeight))); // y * _enemyShipTextures[0].Height * Settings.EnemyScale + y * spacingHeight < Settings.Height / 2.5
+            int maxHorizontal = (int)((Settings.Width - 4 * _enemyShipTexture.Width * Settings.EnemyScale) / (_enemyShipTexture.Width * Settings.EnemyScale + spacingWidth)); // (x + 4) * _enemyShipTextures[0].Width * Settings.EnemyScale + x * spacingWidth < Settings.Width
+            int maxVertical = (int)(Settings.Height / (2.5 * (_enemyShipTexture.Height * Settings.EnemyScale + spacingHeight))); // y * _enemyShipTextures[0].Height * Settings.EnemyScale + y * spacingHeight < Settings.Height / 2.5
 
             for (int x = 2; x <= maxHorizontal; x++)
             {
@@ -56,11 +56,11 @@ namespace SharpInvaders
                 {
                     _gameObjects.Add(
                                     new Enemy(
-                                    _enemyShipTextures[0],
-                                    new Vector2(x * _enemyShipTextures[0].Width * Settings.EnemyScale + x * spacingWidth, y * _enemyShipTextures[0].Height * Settings.EnemyScale + y * spacingHeight),
+                                    _enemyShipTexture,
+                                    new Vector2(x * _enemyShipTexture.Width * Settings.EnemyScale + x * spacingWidth, y * _enemyShipTexture.Height * Settings.EnemyScale + y * spacingHeight),
                                     Settings.EnemyMoveInterval,
-                                    (x - 2.5) * _enemyShipTextures[0].Width * Settings.EnemyScale + x * spacingWidth,
-                                    (maxHorizontal - x) * _enemyShipTextures[0].Width * Settings.EnemyScale + (maxHorizontal - x) * spacingWidth));
+                                    (x - 2.5) * _enemyShipTexture.Width * Settings.EnemyScale + x * spacingWidth,
+                                    (maxHorizontal - x) * _enemyShipTexture.Width * Settings.EnemyScale + (maxHorizontal - x) * spacingWidth));
                 }
             }
 
@@ -73,7 +73,7 @@ namespace SharpInvaders
 
             _player = new Player(Content.Load<Texture2D>("player"), Content.Load<Texture2D>("bullet"));
             _bulletTexture = Content.Load<Texture2D>("bullet");
-            _enemyShipTextures.Add(Content.Load<Texture2D>("green"));
+            _enemyShipTexture = Content.Load<Texture2D>("green");
         }
 
         protected override void Update(GameTime gameTime)
@@ -99,6 +99,7 @@ namespace SharpInvaders
                     ResetGame();
                     break;
                 }
+
                 o.Update(gameTime);
             }
 
