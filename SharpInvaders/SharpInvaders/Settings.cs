@@ -1,10 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-
-namespace SharpInvaders
+﻿namespace SharpInvaders
 {
     public static class Settings
     {
@@ -12,6 +6,10 @@ namespace SharpInvaders
         public static int Height { get; } = 600;
         public static float EnemyScale { get; } = 1f;
         public static float PlayerScale { get; } = 1f;
-        public static int Margin { get; } = 20;
+        public static int PlayerMargin { get; } = 20;
+        public static int EnemyMargin { get; } = 20;
+        public static float BulletSpeed { get; } = 800f;
+        public static float EnemySpeed { get; } = 600f;
+        public static float PlayerSpeed { get; } = 480f;
     }
 }

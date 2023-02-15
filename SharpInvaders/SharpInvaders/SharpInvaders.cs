@@ -55,7 +55,7 @@ namespace SharpInvaders
                 _enemyShipTextures[0],
                 2 + i,
                 new Vector2(Random.Next(0, Settings.Width), -(_enemyShipTextures[0].Height * Settings.EnemyScale)),
-                600));
+                Settings.EnemySpeed));
             }
 
             _player.Position.X = Settings.Width / 2 - _player.Texture.Width / 2;

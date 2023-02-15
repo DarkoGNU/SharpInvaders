@@ -2,11 +2,6 @@
 
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
-using SharpInvaders;
-using System;
-using System.Collections.Generic;
-using System.Text;
-using static System.Formats.Asn1.AsnWriter;
 
 namespace SharpInvaders
 {
@@ -24,7 +19,7 @@ namespace SharpInvaders
         public Bullet(Texture2D texture)
         : base(texture)
         {
-            Speed = 800f;
+            Speed = Settings.BulletSpeed;
             Direction.Y = -1;
             Enabled = true;
             Visible = true;
@@ -51,7 +46,7 @@ namespace SharpInvaders
             if (Enabled)
             {
                 Position += Direction * Speed * (float)gameTime.ElapsedGameTime.TotalSeconds;
-                if (Position.X > Settings.Width || Position.X < -_texture2D.Width)
+                if (Position.Y > Settings.Height || Position.Y < 0 - _texture2D.Height * Scale)
                 {
                     Enabled = false;
                     Visible = false;

@@ -2,17 +2,11 @@
 
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
-using SharpInvaders;
-using System;
-using System.Collections.Generic;
-using System.Text;
-using static System.Formats.Asn1.AsnWriter;
 
 namespace SharpInvaders
 {
     public class Enemy : GameObject
     {
-
         private readonly double _spawnTime;
         public double SpawnTime => _spawnTime;
         public override Rectangle Bounds => new
@@ -56,7 +50,7 @@ namespace SharpInvaders
             if (Enabled)
             {
                 Position += Direction * Speed * (float)gameTime.ElapsedGameTime.TotalSeconds;
-                if (Position.X + _texture2D.Width * Scale < 0)
+                if (Position.Y > Settings.Height)
                 {
                     Enabled = false;
                     Visible = false;

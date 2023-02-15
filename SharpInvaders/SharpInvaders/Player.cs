@@ -56,14 +56,7 @@ namespace SharpInvaders
             {
                 Direction = Vector2.Zero;
                 KeyboardState state = Keyboard.GetState();
-                if (state.IsKeyDown(Keys.Up))
-                {
-                    Direction.Y = -1;
-                }
-                else if (state.IsKeyDown(Keys.Down))
-                {
-                    Direction.Y = 1;
-                }
+
                 if (state.IsKeyDown(Keys.Left))
                 {
                     Direction.X = -1;
@@ -72,27 +65,16 @@ namespace SharpInvaders
                 {
                     Direction.X = 1;
                 }
-                if (Direction != Vector2.Zero)
-                {
-                    Direction.Normalize();
-                }
-                Position += Direction * Speed * (float)gameTime.ElapsedGameTime.TotalSeconds;
-                if (Position.X < 0)
-                {
-                    Position.X = 0;
-                }
-                if (Position.Y < 0)
-                {
-                    Position.Y = 0;
-                }
-                if (Position.X + _texture2D.Width * Scale > Settings.Width)
 
+                Position += Direction * Speed * (float)gameTime.ElapsedGameTime.TotalSeconds;
+
+                if (Position.X < Settings.PlayerMargin)
                 {
-                    Position.X = Settings.Width - _texture2D.Width * Scale;
+                    Position.X = Settings.PlayerMargin;
                 }
-                if (Position.Y + _texture2D.Height * Scale > Settings.Height)
+                else if (Position.X > Settings.Width - _texture2D.Width * Scale - Settings.PlayerMargin)
                 {
-                    Position.Y = Settings.Height - _texture2D.Height * Scale;
+                    Position.X = Settings.Width - _texture2D.Width * Scale - Settings.PlayerMargin;
                 }
             }
         }
