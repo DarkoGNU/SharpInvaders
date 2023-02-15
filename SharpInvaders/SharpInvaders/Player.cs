@@ -30,8 +30,8 @@ namespace SharpInvaders
             Direction = Vector2.Zero;
             Scale = Settings.PlayerScale;
             Speed = 480f;
-            Position.X = 0;
-            Position.Y = (1080 - _texture2D.Height) / 2;
+            Position.X = Settings.Width / 2 - Texture.Width / 2;
+            Position.Y = Settings.Height - 2 * Texture.Height;
         }
 
         public override void Draw(SpriteBatch batch)

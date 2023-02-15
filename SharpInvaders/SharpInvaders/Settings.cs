@@ -12,5 +12,6 @@ namespace SharpInvaders
         public static int Height { get; } = 600;
         public static float EnemyScale { get; } = 1f;
         public static float PlayerScale { get; } = 1f;
+        public static int Margin { get; } = 20;
     }
 }

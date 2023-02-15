@@ -58,8 +58,8 @@ namespace SharpInvaders
                 600));
             }
 
-            _player.Position.X = 600;
-            _player.Position.Y = (Settings.Height - _player.Texture.Height) / 2;
+            _player.Position.X = Settings.Width / 2 - _player.Texture.Width / 2;
+            _player.Position.Y = Settings.Height - 2 * _player.Texture.Height;
         }
 
         protected override void LoadContent()
@@ -89,7 +89,7 @@ namespace SharpInvaders
                 Bullet b = new Bullet(_bulletTexture)
                 {
                     Position = new Vector2(
-                _player.Position.X + _player.Texture.Width * _player.Scale,
+                _player.Position.X + _player.Texture.Width * _player.Scale / 2 - _bulletTexture.Width / 2,
                 _player.Position.Y + (_player.Texture.Height * _player.Scale -
                 _bulletTexture.Height) / 2)
                 };

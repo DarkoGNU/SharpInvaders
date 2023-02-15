@@ -25,7 +25,7 @@ namespace SharpInvaders
         : base(texture)
         {
             Speed = 800f;
-            Direction.X = 1;
+            Direction.Y = -1;
             Enabled = true;
             Visible = true;
         }
