@@ -10,6 +10,6 @@
         public static float BulletSpeed { get; } = 800f;
         public static double EnemyMoveInterval { get; } = 2d;
         public static float PlayerSpeed { get; } = 200f;
-        public static double PlayerShootInterval = 1d;
+        public static double PlayerShootInterval = 0.5d;
     }
 }

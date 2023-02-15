@@ -13,8 +13,9 @@ namespace SharpInvaders
 {
     public class Player : GameObject
     {
-        private float _lastShot = 0;
+        private double _sinceLastShot = Settings.PlayerShootInterval;
         private Texture2D _bulletTexture;
+        private bool _tryShoot = false;
 
         public override Rectangle Bounds => new
         Rectangle(
@@ -85,22 +86,41 @@ namespace SharpInvaders
                 {
                     Position.X = Settings.Width - _texture2D.Width * Scale - Settings.PlayerMargin;
                 }
+
+                _sinceLastShot += gameTime.ElapsedGameTime.TotalSeconds;
+                Shoot();
             }
 
             foreach (GameObject o in Children)
             {
                 o.Update(gameTime);
             }
+
+            Children.RemoveAll(o => o.Enabled == false || o.Visible == false);
         }
 
         public void Reset(Vector2 position)
         {
-            _lastShot = 0;
+            _sinceLastShot = Settings.PlayerShootInterval;
+            _tryShoot = false;
             Position = position;
         }
 
-        public void Shoot(GameTime gameTime)
+        public void TryShoot()
         {
+            _tryShoot = true;
+        }
+
+        private void Shoot()
+        {
+            if (_sinceLastShot < Settings.PlayerShootInterval || !Enabled || !_tryShoot)
+            {
+                return;
+            }
+
+            _sinceLastShot = 0;
+            _tryShoot = false;
+
             Bullet b = new Bullet(_bulletTexture)
             {
                 Position = new Vector2(
@@ -109,8 +129,7 @@ namespace SharpInvaders
                 _bulletTexture.Height) / 2)
             };
 
-           Children.Add(b);
+            Children.Add(b);
         }
-
     }
 }

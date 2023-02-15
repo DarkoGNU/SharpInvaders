@@ -5,6 +5,7 @@ using Microsoft.Xna.Framework.Graphics;
 using Microsoft.Xna.Framework.Input;
 using System.Collections.Generic;
 using System;
+using System.Linq;
 
 namespace SharpInvaders
 {
@@ -15,7 +16,6 @@ namespace SharpInvaders
 
         public static readonly Random Random = new Random();
         private readonly List<GameObject> _gameObjects = new List<GameObject>();
-        private readonly List<GameObject> _playerBullets = new List<GameObject>();
         private readonly List<Texture2D> _enemyShipTextures = new List<Texture2D>();
         private Player _player;
         private KeyboardState _keyboardState;
@@ -89,7 +89,7 @@ namespace SharpInvaders
 
             if (_keyboardState.IsKeyDown(Keys.Space) && _lastKeyboardState.IsKeyUp(Keys.Space))
             {
-                _player.Shoot(gameTime);
+                _player.TryShoot();
             }
 
             foreach (GameObject o in _gameObjects)
@@ -102,7 +102,7 @@ namespace SharpInvaders
                 o.Update(gameTime);
             }
 
-            foreach (GameObject o in _playerBullets)
+            foreach (GameObject o in _player.Children)
             {
                 foreach (GameObject e in _gameObjects)
                 {
@@ -117,11 +117,11 @@ namespace SharpInvaders
                         }
                     }
                 }
+
                 o.Update(gameTime);
             }
 
-            _playerBullets.RemoveAll(b => b.Enabled == false || b.Visible == false);
-            _gameObjects.RemoveAll(g => g.Enabled == false || g.Visible == false);
+            _gameObjects.RemoveAll(g => (g.Enabled == false || g.Visible == false) && g.Children.Count == 0);
 
             base.Update(gameTime);
         }
@@ -142,11 +142,6 @@ namespace SharpInvaders
             _player.Draw(_spriteBatch);
 
             foreach (GameObject o in _gameObjects)
-            {
-                o.Draw(_spriteBatch);
-            }
-
-            foreach (GameObject o in _playerBullets)
             {
                 o.Draw(_spriteBatch);
             }

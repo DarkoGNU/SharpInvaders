@@ -10,7 +10,7 @@ namespace SharpInvaders
 {
     public abstract class GameObject
     {
-        protected readonly List<GameObject> Children = new List<GameObject>();
+        public readonly List<GameObject> Children = new List<GameObject>();
 
         public Vector2 Position;
         public Vector2 Direction;
