@@ -21,7 +21,6 @@ namespace SharpInvaders
         private KeyboardState _keyboardState;
         private KeyboardState _lastKeyboardState;
         private Texture2D _bulletTexture;
-        private double _timer;
 
         public SharpInvaders()
         {
@@ -44,32 +43,35 @@ namespace SharpInvaders
         private void ResetGame()
         {
             _gameObjects.Clear();
-            _timer = 0;
 
             float spacingWidth = (float)(_enemyShipTextures[0].Width * Settings.EnemyScale * 0.5f);
             float spacingHeight = (float)(_enemyShipTextures[0].Height * Settings.EnemyScale * 0.5f);
 
-            for (int x = 2; (x + 4) * _enemyShipTextures[0].Width * Settings.EnemyScale + x * spacingWidth < Settings.Width; x++)
+            int maxHorizontal = (int)((Settings.Width - 4 * _enemyShipTextures[0].Width * Settings.EnemyScale) / (_enemyShipTextures[0].Width * Settings.EnemyScale + spacingWidth)); // (x + 4) * _enemyShipTextures[0].Width * Settings.EnemyScale + x * spacingWidth < Settings.Width
+            int maxVertical = (int)(Settings.Height / (2.5 * (_enemyShipTextures[0].Height * Settings.EnemyScale + spacingHeight))); // y * _enemyShipTextures[0].Height * Settings.EnemyScale + y * spacingHeight < Settings.Height / 2.5
+
+            for (int x = 2; x <= maxHorizontal; x++)
             {
-                for (int y = 1; y * _enemyShipTextures[0].Height * Settings.EnemyScale + y * spacingHeight < Settings.Height / 2.5; y++)
+                for (int y = 1; y <= maxVertical; y++)
                 {
                     _gameObjects.Add(
                                     new Enemy(
                                     _enemyShipTextures[0],
                                     new Vector2(x * _enemyShipTextures[0].Width * Settings.EnemyScale + x * spacingWidth, y * _enemyShipTextures[0].Height * Settings.EnemyScale + y * spacingHeight),
-                                    Settings.EnemySpeed));
+                                    Settings.EnemyMoveInterval,
+                                    (x - 2.5) * _enemyShipTextures[0].Width * Settings.EnemyScale + x * spacingWidth,
+                                    (maxHorizontal - x) * _enemyShipTextures[0].Width * Settings.EnemyScale + (maxHorizontal - x) * spacingWidth));
                 }
             }
 
-            _player.Position.X = Settings.Width / 2 - _player.Texture.Width / 2;
-            _player.Position.Y = Settings.Height - 2 * _player.Texture.Height;
+            _player.Reset(new Vector2(Settings.Width / 2 - _player.Texture.Width / 2, Settings.Height - 2 * _player.Texture.Height));
         }
 
         protected override void LoadContent()
         {
             _spriteBatch = new SpriteBatch(GraphicsDevice);
 
-            _player = new Player(Content.Load<Texture2D>("player"));
+            _player = new Player(Content.Load<Texture2D>("player"), Content.Load<Texture2D>("bullet"));
             _bulletTexture = Content.Load<Texture2D>("bullet");
             _enemyShipTextures.Add(Content.Load<Texture2D>("green"));
         }
@@ -84,18 +86,10 @@ namespace SharpInvaders
             _keyboardState = Keyboard.GetState();
 
             _player.Update(gameTime);
-            _timer += gameTime.ElapsedGameTime.TotalSeconds;
 
             if (_keyboardState.IsKeyDown(Keys.Space) && _lastKeyboardState.IsKeyUp(Keys.Space))
             {
-                Bullet b = new Bullet(_bulletTexture)
-                {
-                    Position = new Vector2(
-                _player.Position.X + _player.Texture.Width * _player.Scale / 2 - _bulletTexture.Width / 2,
-                _player.Position.Y + (_player.Texture.Height * _player.Scale -
-                _bulletTexture.Height) / 2)
-                };
-                _playerBullets.Add(b);
+                _player.Shoot(gameTime);
             }
 
             foreach (GameObject o in _gameObjects)

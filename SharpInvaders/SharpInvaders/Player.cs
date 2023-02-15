@@ -13,6 +13,9 @@ namespace SharpInvaders
 {
     public class Player : GameObject
     {
+        private float _lastShot = 0;
+        private Texture2D _bulletTexture;
+
         public override Rectangle Bounds => new
         Rectangle(
         (int)Position.X,
@@ -22,16 +25,17 @@ namespace SharpInvaders
         public override Vector2 Origin => new Vector2(_texture2D.Width / 2, _texture2D.Height /
         2);
         public override Texture2D Texture => _texture2D;
-        public Player(Texture2D texture)
+        public Player(Texture2D texture, Texture2D bulletTexture)
         : base(texture)
         {
             Visible = true;
             Enabled = true;
             Direction = Vector2.Zero;
             Scale = Settings.PlayerScale;
-            Speed = 480f;
+            Speed = Settings.PlayerSpeed;
             Position.X = Settings.Width / 2 - Texture.Width / 2;
             Position.Y = Settings.Height - 2 * Texture.Height;
+            _bulletTexture = bulletTexture;
         }
 
         public override void Draw(SpriteBatch batch)
@@ -48,6 +52,11 @@ namespace SharpInvaders
                 Scale,
                 SpriteEffects.None,
                 0.5f);
+            }
+
+            foreach (GameObject o in Children)
+            {
+                o.Draw(batch); 
             }
         }
         public override void Update(GameTime gameTime)
@@ -77,6 +86,31 @@ namespace SharpInvaders
                     Position.X = Settings.Width - _texture2D.Width * Scale - Settings.PlayerMargin;
                 }
             }
+
+            foreach (GameObject o in Children)
+            {
+                o.Update(gameTime);
+            }
         }
+
+        public void Reset(Vector2 position)
+        {
+            _lastShot = 0;
+            Position = position;
+        }
+
+        public void Shoot(GameTime gameTime)
+        {
+            Bullet b = new Bullet(_bulletTexture)
+            {
+                Position = new Vector2(
+                Position.X + Texture.Width * Scale / 2 - _bulletTexture.Width / 2,
+                Position.Y + (Texture.Height * Scale -
+                _bulletTexture.Height) / 2)
+            };
+
+           Children.Add(b);
+        }
+
     }
 }

@@ -7,6 +7,11 @@ namespace SharpInvaders
 {
     public class Enemy : GameObject
     {
+        private double _moveInterval;
+        private double _sinceLastMove = 0;
+        private double _offsetLeft;
+        private double _offsetRight;
+
         public override Rectangle Bounds => new
         Rectangle(
         (int)Position.X,
@@ -16,15 +21,17 @@ namespace SharpInvaders
         public override Vector2 Origin => new Vector2(_texture2D.Width / 2, _texture2D.Height /
         2);
         public override Texture2D Texture => _texture2D;
-        public Enemy(Texture2D texture, Vector2 position, float speed)
+        public Enemy(Texture2D texture, Vector2 position, double moveInterval, double offsetLeft, double offsetRight)
         : base(texture)
         {
-            Direction.Y = 1;
-            Speed = speed;
+            Direction.X = -1;
             Position = position;
             Enabled = true;
             Visible = true;
             Scale = Settings.EnemyScale;
+            _moveInterval = moveInterval;
+            _offsetLeft = offsetLeft;
+            _offsetRight = offsetRight;
         }
         public override void Draw(SpriteBatch batch)
         {
@@ -46,11 +53,27 @@ namespace SharpInvaders
         {
             if (Enabled)
             {
-                Position += Direction * Speed * (float)gameTime.ElapsedGameTime.TotalSeconds;
-                if (Position.Y > Settings.Height)
+                _sinceLastMove += gameTime.ElapsedGameTime.TotalSeconds;
+                if (_sinceLastMove > _moveInterval)
                 {
-                    Enabled = false;
-                    Visible = false;
+                    Position += Direction * _texture2D.Width / 3;
+
+                    if (Position.X - _offsetLeft < 0 || Position.X + _texture2D.Width * Scale > Settings.Width - _offsetRight)
+                    {
+                        Position.Y += _texture2D.Height * Scale / 2;
+                        Direction.X *= -1;
+
+                        Position += Direction * _texture2D.Width / 3;
+                        Position.X += Direction.X * 10;
+                    }
+
+                    if (Position.Y > Settings.Height)
+                    {
+                        Enabled = false;
+                        Visible = false;
+                    }
+
+                    _sinceLastMove = 0;
                 }
             }
         }

@@ -7,9 +7,9 @@
         public static float EnemyScale { get; } = 0.7f;
         public static float PlayerScale { get; } = 1f;
         public static int PlayerMargin { get; } = 20;
-        public static int EnemyMargin { get; } = 20;
         public static float BulletSpeed { get; } = 800f;
-        public static float EnemySpeed { get; } = 3f;
-        public static float PlayerSpeed { get; } = 480f;
+        public static double EnemyMoveInterval { get; } = 2d;
+        public static float PlayerSpeed { get; } = 200f;
+        public static double PlayerShootInterval = 1d;
     }
 }
