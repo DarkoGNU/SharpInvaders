@@ -44,10 +44,10 @@ namespace SharpInvaders
         }
         private void ResetGame()
         {
-
             _enemies.Clear();
             _gameObjects.Clear();
             _timer = 0;
+
             for (int i = 0; i < 100; i++)
             {
                 _enemies.Enqueue(
@@ -76,14 +76,18 @@ namespace SharpInvaders
             if (GamePad.GetState(PlayerIndex.One).Buttons.Back == ButtonState.Pressed ||
             Keyboard.GetState().IsKeyDown(Keys.Escape))
                 Exit();
+
             _lastKeyboardState = _keyboardState;
             _keyboardState = Keyboard.GetState();
+
             _player.Update(gameTime);
             _timer += gameTime.ElapsedGameTime.TotalSeconds;
+
             if (_enemies.Count > 0 && _enemies.Peek().SpawnTime <= _timer)
             {
                 _gameObjects.Add(_enemies.Dequeue());
             }
+
             if (_keyboardState.IsKeyDown(Keys.Space) && _lastKeyboardState.IsKeyUp(Keys.Space))
             {
                 Bullet b = new Bullet(_bulletTexture)
@@ -95,8 +99,8 @@ namespace SharpInvaders
                 };
                 _playerBullets.Add(b);
             }
-            foreach (GameObject o in _gameObjects)
 
+            foreach (GameObject o in _gameObjects)
             {
                 if (_player.BoundingBoxCollide(o))
                 {
@@ -105,6 +109,7 @@ namespace SharpInvaders
                 }
                 o.Update(gameTime);
             }
+
             foreach (GameObject o in _playerBullets)
             {
                 foreach (GameObject e in _gameObjects)
@@ -122,14 +127,17 @@ namespace SharpInvaders
                 }
                 o.Update(gameTime);
             }
+
             _playerBullets.RemoveAll(b => b.Enabled == false || b.Visible == false);
             _gameObjects.RemoveAll(g => g.Enabled == false || g.Visible == false);
+
             base.Update(gameTime);
         }
 
         protected override void Draw(GameTime gameTime)
         {
             GraphicsDevice.Clear(Color.Black);
+
             _spriteBatch.Begin(
             SpriteSortMode.BackToFront,
             BlendState.AlphaBlend,
@@ -138,15 +146,19 @@ namespace SharpInvaders
             null,
             null,
             null);
+
             _player.Draw(_spriteBatch);
+
             foreach (GameObject o in _gameObjects)
             {
                 o.Draw(_spriteBatch);
             }
+
             foreach (GameObject o in _playerBullets)
             {
                 o.Draw(_spriteBatch);
             }
+
             base.Draw(gameTime);
             _spriteBatch.End();
         }
