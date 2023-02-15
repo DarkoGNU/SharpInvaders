@@ -6,6 +6,7 @@ using Microsoft.Xna.Framework.Input;
 using System.Collections.Generic;
 using System;
 using System.Linq;
+using System.Diagnostics;
 
 namespace SharpInvaders
 {
@@ -15,12 +16,12 @@ namespace SharpInvaders
         private SpriteBatch _spriteBatch;
 
         public static readonly Random Random = new Random();
-        private readonly List<GameObject> _gameObjects = new List<GameObject>();
-        private Texture2D _enemyShipTexture;
+        private readonly List<Enemy> _enemies = new List<Enemy>();
+        private  Texture2D _enemyShipTexture;
         private Player _player;
-        private KeyboardState _keyboardState;
-        private KeyboardState _lastKeyboardState;
         private Texture2D _bulletTexture;
+
+        private int _originalEnemyCount;
 
         public SharpInvaders()
         {
@@ -42,7 +43,7 @@ namespace SharpInvaders
         }
         private void ResetGame()
         {
-            _gameObjects.Clear();
+            _enemies.Clear();
 
             float spacingWidth = (float)(_enemyShipTexture.Width * Settings.EnemyScale * 0.5f);
             float spacingHeight = (float)(_enemyShipTexture.Height * Settings.EnemyScale * 0.5f);
@@ -54,7 +55,7 @@ namespace SharpInvaders
             {
                 for (int y = 1; y <= maxVertical; y++)
                 {
-                    _gameObjects.Add(
+                    _enemies.Add(
                                     new Enemy(
                                     _enemyShipTexture,
                                     new Vector2(x * _enemyShipTexture.Width * Settings.EnemyScale + x * spacingWidth, y * _enemyShipTexture.Height * Settings.EnemyScale + y * spacingHeight),
@@ -63,6 +64,8 @@ namespace SharpInvaders
                                     (maxHorizontal - x) * _enemyShipTexture.Width * Settings.EnemyScale + (maxHorizontal - x) * spacingWidth));
                 }
             }
+
+            _originalEnemyCount = _enemies.Count;
 
             _player.Reset(new Vector2(Settings.Width / 2 - _player.Texture.Width / 2, Settings.Height - 2 * _player.Texture.Height));
         }
@@ -82,18 +85,15 @@ namespace SharpInvaders
             Keyboard.GetState().IsKeyDown(Keys.Escape))
                 Exit();
 
-            _lastKeyboardState = _keyboardState;
-            _keyboardState = Keyboard.GetState();
-
             _player.Update(gameTime);
 
-            if (_keyboardState.IsKeyDown(Keys.Space) && _lastKeyboardState.IsKeyUp(Keys.Space))
-            {
-                _player.TryShoot();
-            }
+            double enemySpeedMultiplier = 1 + 5 * (_originalEnemyCount - _enemies.Count) / (double)_originalEnemyCount;
+            // Debug.WriteLine(enemySpeedMultiplier.ToString());
 
-            foreach (GameObject o in _gameObjects)
+            foreach (Enemy o in _enemies)
             {
+                o.SpeedMultiplier = enemySpeedMultiplier;
+
                 if (_player.BoundingBoxCollide(o))
                 {
                     ResetGame();
@@ -105,7 +105,7 @@ namespace SharpInvaders
 
             foreach (GameObject o in _player.Children)
             {
-                foreach (GameObject e in _gameObjects)
+                foreach (GameObject e in _enemies)
                 {
                     if (e is Enemy)
                     {
@@ -122,7 +122,7 @@ namespace SharpInvaders
                 o.Update(gameTime);
             }
 
-            _gameObjects.RemoveAll(g => (g.Enabled == false || g.Visible == false) && g.Children.Count == 0);
+            _enemies.RemoveAll(g => (g.Enabled == false || g.Visible == false) && g.Children.Count == 0);
 
             base.Update(gameTime);
         }
@@ -142,7 +142,7 @@ namespace SharpInvaders
 
             _player.Draw(_spriteBatch);
 
-            foreach (GameObject o in _gameObjects)
+            foreach (GameObject o in _enemies)
             {
                 o.Draw(_spriteBatch);
             }

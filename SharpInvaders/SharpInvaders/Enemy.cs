@@ -7,6 +7,8 @@ namespace SharpInvaders
 {
     public class Enemy : GameObject
     {
+        public double SpeedMultiplier { get; set; } = 1;
+
         private double _moveInterval;
         private double _sinceLastMove = 0;
         private double _offsetLeft;
@@ -54,7 +56,7 @@ namespace SharpInvaders
             if (Enabled)
             {
                 _sinceLastMove += gameTime.ElapsedGameTime.TotalSeconds;
-                if (_sinceLastMove > _moveInterval)
+                if (_sinceLastMove > _moveInterval / SpeedMultiplier)
                 {
                     Position += Direction * _texture2D.Width / 3;
 

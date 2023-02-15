@@ -15,7 +15,6 @@ namespace SharpInvaders
     {
         private double _sinceLastShot = Settings.PlayerShootInterval;
         private Texture2D _bulletTexture;
-        private bool _tryShoot = false;
 
         public override Rectangle Bounds => new
         Rectangle(
@@ -102,24 +101,17 @@ namespace SharpInvaders
         public void Reset(Vector2 position)
         {
             _sinceLastShot = Settings.PlayerShootInterval;
-            _tryShoot = false;
             Position = position;
-        }
-
-        public void TryShoot()
-        {
-            _tryShoot = true;
         }
 
         private void Shoot()
         {
-            if (_sinceLastShot < Settings.PlayerShootInterval || !Enabled || !_tryShoot)
+            if (_sinceLastShot < Settings.PlayerShootInterval || !Enabled)
             {
                 return;
             }
 
             _sinceLastShot = 0;
-            _tryShoot = false;
 
             Bullet b = new Bullet(_bulletTexture)
             {
