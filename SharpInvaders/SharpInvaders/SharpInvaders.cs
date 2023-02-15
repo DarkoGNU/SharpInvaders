@@ -17,7 +17,6 @@ namespace SharpInvaders
         private readonly List<GameObject> _gameObjects = new List<GameObject>();
         private readonly List<GameObject> _playerBullets = new List<GameObject>();
         private readonly List<Texture2D> _enemyShipTextures = new List<Texture2D>();
-        private readonly Queue<Enemy> _enemies = new Queue<Enemy>();
         private Player _player;
         private KeyboardState _keyboardState;
         private KeyboardState _lastKeyboardState;
@@ -44,18 +43,22 @@ namespace SharpInvaders
         }
         private void ResetGame()
         {
-            _enemies.Clear();
             _gameObjects.Clear();
             _timer = 0;
 
-            for (int i = 0; i < 100; i++)
+            float spacingWidth = (float)(_enemyShipTextures[0].Width * Settings.EnemyScale * 0.5f);
+            float spacingHeight = (float)(_enemyShipTextures[0].Height * Settings.EnemyScale * 0.5f);
+
+            for (int x = 2; (x + 4) * _enemyShipTextures[0].Width * Settings.EnemyScale + x * spacingWidth < Settings.Width; x++)
             {
-                _enemies.Enqueue(
-                new Enemy(
-                _enemyShipTextures[0],
-                2 + i,
-                new Vector2(Random.Next(0, Settings.Width), -(_enemyShipTextures[0].Height * Settings.EnemyScale)),
-                Settings.EnemySpeed));
+                for (int y = 1; y * _enemyShipTextures[0].Height * Settings.EnemyScale + y * spacingHeight < Settings.Height / 2.5; y++)
+                {
+                    _gameObjects.Add(
+                                    new Enemy(
+                                    _enemyShipTextures[0],
+                                    new Vector2(x * _enemyShipTextures[0].Width * Settings.EnemyScale + x * spacingWidth, y * _enemyShipTextures[0].Height * Settings.EnemyScale + y * spacingHeight),
+                                    Settings.EnemySpeed));
+                }
             }
 
             _player.Position.X = Settings.Width / 2 - _player.Texture.Width / 2;
@@ -82,11 +85,6 @@ namespace SharpInvaders
 
             _player.Update(gameTime);
             _timer += gameTime.ElapsedGameTime.TotalSeconds;
-
-            if (_enemies.Count > 0 && _enemies.Peek().SpawnTime <= _timer)
-            {
-                _gameObjects.Add(_enemies.Dequeue());
-            }
 
             if (_keyboardState.IsKeyDown(Keys.Space) && _lastKeyboardState.IsKeyUp(Keys.Space))
             {

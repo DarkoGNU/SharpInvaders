@@ -7,8 +7,6 @@ namespace SharpInvaders
 {
     public class Enemy : GameObject
     {
-        private readonly double _spawnTime;
-        public double SpawnTime => _spawnTime;
         public override Rectangle Bounds => new
         Rectangle(
         (int)Position.X,
@@ -18,12 +16,11 @@ namespace SharpInvaders
         public override Vector2 Origin => new Vector2(_texture2D.Width / 2, _texture2D.Height /
         2);
         public override Texture2D Texture => _texture2D;
-        public Enemy(Texture2D texture, double spawnTime, Vector2 position, float speed)
+        public Enemy(Texture2D texture, Vector2 position, float speed)
         : base(texture)
         {
             Direction.Y = 1;
             Speed = speed;
-            _spawnTime = spawnTime;
             Position = position;
             Enabled = true;
             Visible = true;
