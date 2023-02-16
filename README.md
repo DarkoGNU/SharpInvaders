@@ -17,3 +17,8 @@ It's really simple.
 - if an enemy touches you, you die
 - if enemy's bullet touches you, you die
 - if an enemy reaches the bottom, you die
+
+If you need help with running the game:
+
+- unpack the archive from releases (App.zip)
+- run SharpInvaders.exe
