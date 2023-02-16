@@ -102,9 +102,18 @@ namespace SharpInvaders
             Children.RemoveAll(o => o.Enabled == false || o.Visible == false);
         }
 
-        public bool GameOver()
+        public bool GameOver(GameObject o)
         {
-            return Position.Y + Texture.Height * Scale > Settings.Height;
+            foreach (GameObject b in Children)
+            {
+                if (b.BoundingBoxCollide(o))
+                {
+                    return true;
+                }
+            }
+
+            return Position.Y + Texture.Height * Scale > Settings.Height
+                || o.BoundingBoxCollide(this);
         }
 
         private void Shoot()

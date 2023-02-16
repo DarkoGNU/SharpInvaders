@@ -126,15 +126,9 @@ namespace SharpInvaders
             {
                 o.SpeedMultiplier = enemySpeedMultiplier;
 
-                if (_player.BoundingBoxCollide(o))
-                {
-                    GameOver();
-                    break;
-                }
-
                 o.Update(gameTime);
 
-                if (o.GameOver())
+                if (o.GameOver(_player))
                 {
                     GameOver();
                     break;
