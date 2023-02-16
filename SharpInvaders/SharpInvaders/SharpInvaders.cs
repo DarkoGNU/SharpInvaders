@@ -31,7 +31,7 @@ namespace SharpInvaders
         private readonly List<Enemy> _enemies = new List<Enemy>();
         private Texture2D _enemyShipTexture;
         private Player _player;
-        private Texture2D _bulletTexture;
+        private Texture2D _enemyBulletTexture;
         private SpriteFont _font;
 
         private int _originalEnemyCount;
@@ -76,7 +76,9 @@ namespace SharpInvaders
                                     new Vector2(x * _enemyShipTexture.Width * Settings.EnemyScale + x * spacingWidth, y * _enemyShipTexture.Height * Settings.EnemyScale + y * spacingHeight),
                                     Settings.EnemyMoveInterval,
                                     (x - 2.5) * _enemyShipTexture.Width * Settings.EnemyScale + x * spacingWidth,
-                                    (maxHorizontal - x) * _enemyShipTexture.Width * Settings.EnemyScale + (maxHorizontal - x) * spacingWidth));
+                                    (maxHorizontal - x) * _enemyShipTexture.Width * Settings.EnemyScale + (maxHorizontal - x) * spacingWidth,
+                                    _enemyBulletTexture,
+                                    Settings.EnemyShootChance * (int)_gameState - 1));
                 }
             }
 
@@ -92,7 +94,7 @@ namespace SharpInvaders
             _spriteBatch = new SpriteBatch(GraphicsDevice);
 
             _player = new Player(Content.Load<Texture2D>("player"), Content.Load<Texture2D>("bullet"));
-            _bulletTexture = Content.Load<Texture2D>("bullet");
+            _enemyBulletTexture = Content.Load<Texture2D>("bullet2");
             _enemyShipTexture = Content.Load<Texture2D>("green");
             _font = Content.Load<SpriteFont>("Font");
         }
@@ -109,7 +111,7 @@ namespace SharpInvaders
                 return;
             }
 
-            _score = (_lastRoundScore + _originalEnemyCount - _enemies.Count) * 100;
+            _score = _lastRoundScore + (_originalEnemyCount - _enemies.Count) * 100;
 
             if (GamePad.GetState(PlayerIndex.One).Buttons.Back == ButtonState.Pressed ||
             Keyboard.GetState().IsKeyDown(Keys.Escape))
@@ -163,6 +165,12 @@ namespace SharpInvaders
             if (_enemies.Count == 0)
             {
                 _gameState += 1;
+
+
+                if (_gameState != GameState.Win)
+                {
+                    ResetGame();
+                }
             }
 
             base.Update(gameTime);

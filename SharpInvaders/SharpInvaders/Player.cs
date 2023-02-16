@@ -113,7 +113,7 @@ namespace SharpInvaders
 
             _sinceLastShot = 0;
 
-            Bullet b = new Bullet(_bulletTexture)
+            Bullet b = new Bullet(_bulletTexture, new Vector2(0, -1))
             {
                 Position = new Vector2(
                 Position.X + Texture.Width * Scale / 2 - _bulletTexture.Width / 2,
