@@ -18,8 +18,8 @@ namespace SharpInvaders
             Level1 = 1,
             Level2 = 2,
             Level3 = 3,
-            GameOver = 4,
-            Win = 5,
+            Win = 4,
+            GameOver = 5,
         };
 
         private GameState _gameState = GameState.Ready;
@@ -160,6 +160,11 @@ namespace SharpInvaders
 
             _enemies.RemoveAll(g => (g.Enabled == false || g.Visible == false) && g.Children.Count == 0);
 
+            if (_enemies.Count == 0)
+            {
+                _gameState += 1;
+            }
+
             base.Update(gameTime);
         }
 
@@ -185,7 +190,7 @@ namespace SharpInvaders
 
             _spriteBatch.DrawString(_font, "Score: " + _score, new Vector2(20, 20), Color.White);
 
-            if (_gameState != GameState.Ready && _gameState != GameState.GameOver)
+            if (_gameState != GameState.Ready && _gameState != GameState.GameOver && _gameState != GameState.Win)
             {
                 _spriteBatch.DrawString(_font, "Level: " + (int)_gameState, new Vector2(20, 40), Color.White);
             }
@@ -195,7 +200,7 @@ namespace SharpInvaders
             }
             else if (_gameState == GameState.Win)
             {
-                _spriteBatch.DrawString(_font, "You win!" + (int)_gameState, new Vector2(20, 40), Color.White);
+                _spriteBatch.DrawString(_font, "You win!", new Vector2(20, 40), Color.White);
             }
             else
             {

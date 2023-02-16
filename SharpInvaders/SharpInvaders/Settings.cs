@@ -11,5 +11,6 @@
         public static double EnemyMoveInterval { get; } = 2d;
         public static float PlayerSpeed { get; } = 200f;
         public static double PlayerShootInterval = 0.5d;
+        public static double EnemyShootChance = 0.05d;
     }
 }
