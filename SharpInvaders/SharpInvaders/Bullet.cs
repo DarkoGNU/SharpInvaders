@@ -26,6 +26,7 @@ namespace SharpInvaders
         }
         public override void Draw(SpriteBatch batch)
         {
+            // Draw the bullet if it's visible
             if (Visible)
             {
                 batch.Draw(
@@ -43,6 +44,7 @@ namespace SharpInvaders
 
         public override void Update(GameTime gameTime)
         {
+            // Update the bullet if it's enabled
             if (Enabled)
             {
                 Position += Direction * Speed * (float)gameTime.ElapsedGameTime.TotalSeconds;
