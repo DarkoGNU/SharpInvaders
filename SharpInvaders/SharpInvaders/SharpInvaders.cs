@@ -12,6 +12,15 @@ namespace SharpInvaders
 {
     public class SharpInvaders : Game
     {
+        private enum GameState
+        {
+            Ready,
+            Level1,
+            Level2,
+            Level3,
+            GameOver,
+        }
+
         private GraphicsDeviceManager _graphics;
         private SpriteBatch _spriteBatch;
 
@@ -87,8 +96,8 @@ namespace SharpInvaders
 
             _player.Update(gameTime);
 
-            double enemySpeedMultiplier = 1 + 5 * (_originalEnemyCount - _enemies.Count) / (double)_originalEnemyCount;
-            // Debug.WriteLine(enemySpeedMultiplier.ToString());
+            double enemySpeedMultiplier = 1 + 9 * (_originalEnemyCount - _enemies.Count) / (double)_originalEnemyCount;
+            Debug.WriteLine(enemySpeedMultiplier.ToString());
 
             foreach (Enemy o in _enemies)
             {
@@ -101,6 +110,12 @@ namespace SharpInvaders
                 }
 
                 o.Update(gameTime);
+
+                if (o.GameOver())
+                {
+                    ResetGame();
+                    break;
+                }
             }
 
             foreach (GameObject o in _player.Children)

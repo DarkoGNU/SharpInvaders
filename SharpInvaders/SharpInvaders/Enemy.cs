@@ -79,5 +79,10 @@ namespace SharpInvaders
                 }
             }
         }
+
+        public bool GameOver()
+        {
+            return Position.Y + Texture.Height * Scale > Settings.Height;
+        }
     }
 }
