@@ -14,12 +14,14 @@ namespace SharpInvaders
     {
         private enum GameState
         {
-            Ready,
-            Level1,
-            Level2,
-            Level3,
-            GameOver,
-        }
+            Ready = 0,
+            Level1 = 1,
+            Level2 = 2,
+            Level3 = 3,
+            GameOver = 4,
+        };
+
+        private GameState _gameState = GameState.Ready;
 
         private GraphicsDeviceManager _graphics;
         private SpriteBatch _spriteBatch;
@@ -29,8 +31,11 @@ namespace SharpInvaders
         private  Texture2D _enemyShipTexture;
         private Player _player;
         private Texture2D _bulletTexture;
+        private SpriteFont _font;
 
         private int _originalEnemyCount;
+        private int _lastRoundScore = 0;
+        private int _score = 0;
 
         public SharpInvaders()
         {
@@ -49,6 +54,9 @@ namespace SharpInvaders
 
             LoadContent();
             ResetGame();
+
+
+            _gameState = GameState.Level1;
         }
         private void ResetGame()
         {
@@ -75,6 +83,8 @@ namespace SharpInvaders
             }
 
             _originalEnemyCount = _enemies.Count;
+            _lastRoundScore = _score;
+            _score = 0;
 
             _player.Reset(new Vector2(Settings.Width / 2 - _player.Texture.Width / 2, Settings.Height - 2 * _player.Texture.Height));
         }
@@ -86,10 +96,13 @@ namespace SharpInvaders
             _player = new Player(Content.Load<Texture2D>("player"), Content.Load<Texture2D>("bullet"));
             _bulletTexture = Content.Load<Texture2D>("bullet");
             _enemyShipTexture = Content.Load<Texture2D>("green");
+            _font = Content.Load<SpriteFont>("Font");
         }
 
         protected override void Update(GameTime gameTime)
         {
+            _score = (_lastRoundScore + _originalEnemyCount - _enemies.Count) * 100;
+
             if (GamePad.GetState(PlayerIndex.One).Buttons.Back == ButtonState.Pressed ||
             Keyboard.GetState().IsKeyDown(Keys.Escape))
                 Exit();
@@ -160,6 +173,13 @@ namespace SharpInvaders
             foreach (GameObject o in _enemies)
             {
                 o.Draw(_spriteBatch);
+            }
+
+            _spriteBatch.DrawString(_font, "Score: " + _score, new Vector2(20, 20), Color.White);
+
+            if (_gameState != GameState.Ready && _gameState != GameState.GameOver)
+            {
+                _spriteBatch.DrawString(_font, "Level: " + (int)_gameState, new Vector2(20, 40), Color.White);
             }
 
             base.Draw(gameTime);
