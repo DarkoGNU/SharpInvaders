@@ -3,6 +3,7 @@
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
 using System;
+using System.Diagnostics;
 
 namespace SharpInvaders
 {
@@ -113,7 +114,7 @@ namespace SharpInvaders
                 return;
             }
 
-            Bullet b = new Bullet(_bulletTexture, new Vector2(0, 1))
+            Bullet b = new Bullet(_bulletTexture, new Vector2(0, 1), Settings.EnemyBulletSpeed)
             {
                 Position = new Vector2(
                 Position.X + Texture.Width * Scale / 2 - _bulletTexture.Width / 2,

@@ -8,9 +8,10 @@
         public static float PlayerScale { get; } = 1f;
         public static int PlayerMargin { get; } = 20;
         public static float BulletSpeed { get; } = 800f;
+        public static float EnemyBulletSpeed { get; } = 300f;
         public static double EnemyMoveInterval { get; } = 2d;
         public static float PlayerSpeed { get; } = 200f;
-        public static double PlayerShootInterval = 0.01d;//0.5d;
-        public static double EnemyShootChance = 0.05d;
+        public static double PlayerShootInterval = 0.5d;
+        public static double EnemyShootChance = 0.0002d;
     }
 }

@@ -16,10 +16,10 @@ namespace SharpInvaders
         public override Vector2 Origin => new Vector2(_texture2D.Width / 2, _texture2D.Height /
         2);
         public override Texture2D Texture => _texture2D;
-        public Bullet(Texture2D texture, Vector2 direction)
+        public Bullet(Texture2D texture, Vector2 direction, float speed)
         : base(texture)
         {
-            Speed = Settings.BulletSpeed;
+            Speed = speed;
             Direction = direction;
             Enabled = true;
             Visible = true;

@@ -78,7 +78,7 @@ namespace SharpInvaders
                                     (x - 2.5) * _enemyShipTexture.Width * Settings.EnemyScale + x * spacingWidth,
                                     (maxHorizontal - x) * _enemyShipTexture.Width * Settings.EnemyScale + (maxHorizontal - x) * spacingWidth,
                                     _enemyBulletTexture,
-                                    Settings.EnemyShootChance * (int)_gameState - 1));
+                                    Settings.EnemyShootChance * ((int)_gameState + 1)));
                 }
             }
 
@@ -120,7 +120,7 @@ namespace SharpInvaders
             _player.Update(gameTime);
 
             double enemySpeedMultiplier = 1 + 9 * (_originalEnemyCount - _enemies.Count) / (double)_originalEnemyCount;
-            Debug.WriteLine(enemySpeedMultiplier.ToString());
+            // Debug.WriteLine(enemySpeedMultiplier.ToString());
 
             foreach (Enemy o in _enemies)
             {
