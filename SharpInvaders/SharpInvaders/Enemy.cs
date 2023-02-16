@@ -62,7 +62,7 @@ namespace SharpInvaders
 
                     if (Position.X - _offsetLeft < 0 || Position.X + _texture2D.Width * Scale > Settings.Width - _offsetRight)
                     {
-                        Position.Y += _texture2D.Height * Scale / 2;
+                        Position.Y += _texture2D.Height * Scale;
                         Direction.X *= -1;
 
                         Position += Direction * _texture2D.Width / 3;

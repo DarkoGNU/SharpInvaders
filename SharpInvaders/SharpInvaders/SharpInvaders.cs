@@ -19,6 +19,7 @@ namespace SharpInvaders
             Level2 = 2,
             Level3 = 3,
             GameOver = 4,
+            Win = 5,
         };
 
         private GameState _gameState = GameState.Ready;
@@ -28,7 +29,7 @@ namespace SharpInvaders
 
         public static readonly Random Random = new Random();
         private readonly List<Enemy> _enemies = new List<Enemy>();
-        private  Texture2D _enemyShipTexture;
+        private Texture2D _enemyShipTexture;
         private Player _player;
         private Texture2D _bulletTexture;
         private SpriteFont _font;
@@ -54,9 +55,6 @@ namespace SharpInvaders
 
             LoadContent();
             ResetGame();
-
-
-            _gameState = GameState.Level1;
         }
         private void ResetGame()
         {
@@ -101,6 +99,16 @@ namespace SharpInvaders
 
         protected override void Update(GameTime gameTime)
         {
+            if (_gameState == GameState.Ready || _gameState == GameState.GameOver || _gameState == GameState.Win)
+            {
+                if (_gameState == GameState.Ready && (Keyboard.GetState().IsKeyDown(Keys.Left) || Keyboard.GetState().IsKeyDown(Keys.Right)))
+                {
+                    _gameState = GameState.Level1;
+                }
+
+                return;
+            }
+
             _score = (_lastRoundScore + _originalEnemyCount - _enemies.Count) * 100;
 
             if (GamePad.GetState(PlayerIndex.One).Buttons.Back == ButtonState.Pressed ||
@@ -118,7 +126,7 @@ namespace SharpInvaders
 
                 if (_player.BoundingBoxCollide(o))
                 {
-                    ResetGame();
+                    GameOver();
                     break;
                 }
 
@@ -126,7 +134,7 @@ namespace SharpInvaders
 
                 if (o.GameOver())
                 {
-                    ResetGame();
+                    GameOver();
                     break;
                 }
             }
@@ -155,6 +163,11 @@ namespace SharpInvaders
             base.Update(gameTime);
         }
 
+        private void GameOver()
+        {
+            _gameState = GameState.GameOver;
+        }
+
         protected override void Draw(GameTime gameTime)
         {
             GraphicsDevice.Clear(Color.Black);
@@ -170,16 +183,31 @@ namespace SharpInvaders
 
             _player.Draw(_spriteBatch);
 
-            foreach (GameObject o in _enemies)
-            {
-                o.Draw(_spriteBatch);
-            }
-
             _spriteBatch.DrawString(_font, "Score: " + _score, new Vector2(20, 20), Color.White);
 
             if (_gameState != GameState.Ready && _gameState != GameState.GameOver)
             {
                 _spriteBatch.DrawString(_font, "Level: " + (int)_gameState, new Vector2(20, 40), Color.White);
+            }
+            else if (_gameState == GameState.GameOver)
+            {
+                _spriteBatch.DrawString(_font, "Game Over!", new Vector2(20, 40), Color.White);
+            }
+            else if (_gameState == GameState.Win)
+            {
+                _spriteBatch.DrawString(_font, "You win!" + (int)_gameState, new Vector2(20, 40), Color.White);
+            }
+            else
+            {
+                _spriteBatch.DrawString(_font, "Press an arrow key to begin!", new Vector2(20, 40), Color.White);
+            }
+
+            if (_gameState != GameState.Ready)
+            {
+                foreach (GameObject o in _enemies)
+                {
+                    o.Draw(_spriteBatch);
+                }
             }
 
             base.Draw(gameTime);
