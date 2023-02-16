@@ -119,7 +119,7 @@ namespace SharpInvaders
 
             _player.Update(gameTime);
 
-            double enemySpeedMultiplier = 1 + 9 * (_originalEnemyCount - _enemies.Count) / (double)_originalEnemyCount;
+            double enemySpeedMultiplier = 1 + 5 * (_originalEnemyCount - _enemies.Count) / (double)_originalEnemyCount;
             // Debug.WriteLine(enemySpeedMultiplier.ToString());
 
             foreach (Enemy o in _enemies)
